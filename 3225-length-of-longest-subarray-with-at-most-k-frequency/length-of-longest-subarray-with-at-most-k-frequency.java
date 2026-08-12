@@ -6,15 +6,7 @@ class Solution {
             return 1;
         }
         for(int right=0;right<nums.length;right++){
-
-            if(map.containsKey(nums[right])){
-                if(map.get(nums[right])<=k){
                 map.put(nums[right],map.getOrDefault(nums[right],0)+1);
-              }
-            }
-            if(!map.containsKey(nums[right])){
-                map.put(nums[right],map.getOrDefault(nums[right],0)+1);
-              }
             while(map.get(nums[right])>k){
                 map.put(nums[left],map.getOrDefault(nums[left],0)-1);
                 if(map.get(nums[left])==0){
