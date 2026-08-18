@@ -1,60 +1,40 @@
 class Solution {
     public String minWindow(String s, String t) {
-
-        if (s.length() < t.length()) return "";
-
-        Map<Character, Integer> map = new HashMap<>();
-
-        // Store frequencies of t
-        for (char c : t.toCharArray()) {
-            map.put(c, map.getOrDefault(c, 0) + 1);
+        int need[]=new int[128];
+        int window[]=new int[128];
+        for(char c:t.toCharArray()){
+            need[c]++;
         }
-
-        int left = 0;
-        int matched = 0;
-        int start = 0;
-        int minLength = Integer.MAX_VALUE;
-
-        int required = map.size();
-
-        for (int right = 0; right < s.length(); right++) {
-
-            char c = s.charAt(right);
-
-            if (map.containsKey(c)) {
-
-                map.put(c, map.get(c) - 1);
-
-                if (map.get(c) == 0) {
-                    matched++;
-                }
+        int required=0;
+        for(int count:need){
+            if(count>0){
+                required++;
             }
-
-            while (matched == required) {
-
-                if (right - left + 1 < minLength) {
-                    minLength = right - left + 1;
-                    start = left;
+        }
+        int have=0;int left=0;int start=0;int minLength=Integer.MAX_VALUE;
+        for(int right=0;right<s.length();right++){
+            char c=s.charAt(right);
+            window[c]++;
+            if(need[c]>0&&window[c]==need[c]){
+                have++;
+            }
+            while(have==required){
+                int windowLen=right-left+1;
+                if(windowLen<minLength){
+                    minLength=windowLen;
+                    start=left;
                 }
-
-                char leftChar = s.charAt(left);
-
-                if (map.containsKey(leftChar)) {
-
-                    map.put(leftChar, map.get(leftChar) + 1);
-
-                    if (map.get(leftChar) == 1) {
-                        matched--;
-                    }
+                char leftchar=s.charAt(left);
+                window[leftchar]--;
+                if(need[leftchar]>0&&window[leftchar]<need[leftchar]){
+                    have--;
                 }
-
                 left++;
             }
         }
-
-        if (minLength == Integer.MAX_VALUE)
-            return "";
-
-        return s.substring(start, start + minLength);
+            if(minLength==Integer.MAX_VALUE){
+                return "";
+            }
+            return s.substring(start,start+minLength);
+        }
     }
-}
